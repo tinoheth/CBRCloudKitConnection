@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+@interface PodsDummy_Pods_CBRCloudKitConnection_CBRCloudKitConnection : NSObject
+@end
+@implementation PodsDummy_Pods_CBRCloudKitConnection_CBRCloudKitConnection
+@end

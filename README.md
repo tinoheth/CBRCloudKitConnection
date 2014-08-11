@@ -1,6 +1,6 @@
 # CBRCloudKitConnection
 
-[![CI Status](http://img.shields.io/travis/Oliver Letterer/CBRCloudKitConnection.svg?style=flat)](https://travis-ci.org/Oliver Letterer/CBRCloudKitConnection)
+[![CI Status](http://img.shields.io/travis/Cloud-Bridge/CBRCloudKitConnection.svg?style=flat)](https://travis-ci.org/Cloud-Bridge/CBRCloudKitConnection)
 [![Version](https://img.shields.io/cocoapods/v/CBRCloudKitConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRCloudKitConnection)
 [![License](https://img.shields.io/cocoapods/l/CBRCloudKitConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRCloudKitConnection)
 [![Platform](https://img.shields.io/cocoapods/p/CBRCloudKitConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRCloudKitConnection)
