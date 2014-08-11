@@ -1,0 +1,7 @@
+
+target 'CBRCloudKitConnection', :exclusive => true do
+  pod "CBRCloudKitConnection", :path => "../"
+
+  pod 'Specta', '~> 0.2.1'
+  pod 'Expecta'
+end
