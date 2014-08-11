@@ -21,12 +21,6 @@
  THE SOFTWARE.
  */
 
-@import Foundation;
-
-#ifndef NS_DESIGNATED_INITIALIZER
-#define NS_DESIGNATED_INITIALIZER
-#endif
-
 
 
 /**

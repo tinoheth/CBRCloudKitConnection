@@ -1,40 +1,61 @@
 //
 //  CBRCloudKitConnectionTests.m
-//  CBRCloudKitConnection
+//  CloudBridge
 //
-//  Created by Oliver Letterer on 11.08.14.
+//  Created by Oliver Letterer on 09.08.14.
 //  Copyright (c) 2014 Oliver Letterer. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-@interface CBRCloudKitConnectionTests : XCTestCase
+#import <CloudBridge.h>
+#import <CBRCloudKitConnection.h>
+
+#import "CBRTestCase.h"
+#import "CBRTestDatabase.h"
+
+@interface CBRCloudKitConnectionTests : CBRTestCase
+
+@property (nonatomic, strong) CKRecordID *recordID;
+
+@property (nonatomic, strong) CBRCloudKitConnection *connection;
+@property (nonatomic, strong) CBRTestDatabase *database;
+
 
 @end
 
 @implementation CBRCloudKitConnectionTests
 
-- (void)setUp {
+- (void)setUp
+{
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    self.recordID = [[CKRecordID alloc] initWithRecordName:NSStringFromClass([CloudKitEntity1 class]) zoneID:[[CKRecordZoneID alloc] initWithZoneName:@"__default__" ownerName:@"__oliver__"]];
+
+    self.database = [CBRTestDatabase testDatabase];
+    self.connection = [[CBRCloudKitConnection alloc] initWithDatabase:self.database.database];
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
+- (void)testThatBackendTranslatedManagedObjectReferencesIntoCKRecordIDs
+{
+    CloudKitEntity1 *entity = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([CloudKitEntity1 class])
+                                                            inManagedObjectContext:self.context];
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
-}
+    entity.stringValue = @"string";
+    entity.dateValue = [NSDate date];
+    entity.recordIDString = self.recordID.recordIDString;
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND inverseRelationship == %@", entity.stringValue, entity];
+    [self.connection fetchCloudObjectsForEntity:entity.entity withPredicate:predicate completionHandler:NULL];
+
+    expect(self.database.operations).to.haveCountOf(1);
+    CKQueryOperation *operation = self.database.operations.firstObject;
+    NSCompoundPredicate *sentPredicate = (NSCompoundPredicate *)operation.query.predicate;
+    NSComparisonPredicate *recordIDPredicate = sentPredicate.subpredicates[1];
+
+    expect(recordIDPredicate.leftExpression.keyPath).to.equal(@"inverseRelationship");
+    expect(recordIDPredicate.rightExpression.constantValue).to.equal(self.recordID);
 }
 
 @end

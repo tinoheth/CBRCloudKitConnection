@@ -12,8 +12,16 @@
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
-		A72118261998E2A6000D6037 /* CBRCloudKitConnectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A72118251998E2A6000D6037 /* CBRCloudKitConnectionTests.m */; };
-		A72118281998E2E8000D6037 /* CBRManagedObjectToCKRecordTransformerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A72118271998E2E8000D6037 /* CBRManagedObjectToCKRecordTransformerTests.m */; };
+		A721183619990953000D6037 /* picture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A721183519990953000D6037 /* picture.jpg */; };
+		A721183D199909C2000D6037 /* CBRCloudKitConnectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A721183B199909C2000D6037 /* CBRCloudKitConnectionTests.m */; };
+		A721183E199909C2000D6037 /* CBRManagedObjectToRecordTransformerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A721183C199909C2000D6037 /* CBRManagedObjectToRecordTransformerTests.m */; };
+		A7211845199909CA000D6037 /* CBRTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = A7211840199909CA000D6037 /* CBRTestCase.m */; };
+		A7211846199909CA000D6037 /* CBRTestDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A7211842199909CA000D6037 /* CBRTestDatabase.m */; };
+		A7211847199909CA000D6037 /* CBRTestDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A7211844199909CA000D6037 /* CBRTestDataStore.m */; };
+		A721184A199909DA000D6037 /* CBRTestDataStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A7211848199909DA000D6037 /* CBRTestDataStore.xcdatamodeld */; };
+		A721184E19990A2B000D6037 /* CloudKitEntity2.m in Sources */ = {isa = PBXBuildFile; fileRef = A721184D19990A2B000D6037 /* CloudKitEntity2.m */; };
+		A721185119990A2B000D6037 /* CloudKitDataBlob.m in Sources */ = {isa = PBXBuildFile; fileRef = A721185019990A2B000D6037 /* CloudKitDataBlob.m */; };
+		A721185419990A2B000D6037 /* CloudKitEntity1.m in Sources */ = {isa = PBXBuildFile; fileRef = A721185319990A2B000D6037 /* CloudKitEntity1.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,8 +38,23 @@
 		65ABAC42E8B84464B041B7F3 /* Pods-CBRCloudKitConnection.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CBRCloudKitConnection.xcconfig"; path = "Pods/Pods-CBRCloudKitConnection.xcconfig"; sourceTree = "<group>"; };
 		76A901E57E2C4F568AFD9681 /* CBRCloudKitConnection.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = CBRCloudKitConnection.podspec; path = ../CBRCloudKitConnection.podspec; sourceTree = "<group>"; };
 		A3700925682B40E4B3FEFB52 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		A72118251998E2A6000D6037 /* CBRCloudKitConnectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBRCloudKitConnectionTests.m; sourceTree = "<group>"; };
-		A72118271998E2E8000D6037 /* CBRManagedObjectToCKRecordTransformerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBRManagedObjectToCKRecordTransformerTests.m; sourceTree = "<group>"; };
+		A721183519990953000D6037 /* picture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = picture.jpg; sourceTree = "<group>"; };
+		A721183B199909C2000D6037 /* CBRCloudKitConnectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBRCloudKitConnectionTests.m; sourceTree = "<group>"; };
+		A721183C199909C2000D6037 /* CBRManagedObjectToRecordTransformerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBRManagedObjectToRecordTransformerTests.m; sourceTree = "<group>"; };
+		A721183F199909CA000D6037 /* CBRTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBRTestCase.h; sourceTree = "<group>"; };
+		A7211840199909CA000D6037 /* CBRTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBRTestCase.m; sourceTree = "<group>"; };
+		A7211841199909CA000D6037 /* CBRTestDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBRTestDatabase.h; sourceTree = "<group>"; };
+		A7211842199909CA000D6037 /* CBRTestDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBRTestDatabase.m; sourceTree = "<group>"; };
+		A7211843199909CA000D6037 /* CBRTestDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBRTestDataStore.h; sourceTree = "<group>"; };
+		A7211844199909CA000D6037 /* CBRTestDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBRTestDataStore.m; sourceTree = "<group>"; };
+		A7211849199909DA000D6037 /* CDCTestDataStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDCTestDataStore.xcdatamodel; sourceTree = "<group>"; };
+		A721184B19990A2A000D6037 /* CBRCloudKitConnection-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CBRCloudKitConnection-Bridging-Header.h"; sourceTree = "<group>"; };
+		A721184C19990A2B000D6037 /* CloudKitEntity2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudKitEntity2.h; sourceTree = "<group>"; };
+		A721184D19990A2B000D6037 /* CloudKitEntity2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudKitEntity2.m; sourceTree = "<group>"; };
+		A721184F19990A2B000D6037 /* CloudKitDataBlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudKitDataBlob.h; sourceTree = "<group>"; };
+		A721185019990A2B000D6037 /* CloudKitDataBlob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudKitDataBlob.m; sourceTree = "<group>"; };
+		A721185219990A2B000D6037 /* CloudKitEntity1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudKitEntity1.h; sourceTree = "<group>"; };
+		A721185319990A2B000D6037 /* CloudKitEntity1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudKitEntity1.m; sourceTree = "<group>"; };
 		D8B25645DBA54A1988BBAF69 /* libPods-CBRCloudKitConnection.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CBRCloudKitConnection.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -85,8 +108,8 @@
 		6003F5B5195388D20070C39A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				A72118251998E2A6000D6037 /* CBRCloudKitConnectionTests.m */,
-				A72118271998E2E8000D6037 /* CBRManagedObjectToCKRecordTransformerTests.m */,
+				A721183B199909C2000D6037 /* CBRCloudKitConnectionTests.m */,
+				A721183C199909C2000D6037 /* CBRManagedObjectToRecordTransformerTests.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -95,8 +118,23 @@
 		6003F5B6195388D20070C39A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6003F5B7195388D20070C39A /* Tests-Info.plist */,
+				A721184B19990A2A000D6037 /* CBRCloudKitConnection-Bridging-Header.h */,
+				A721183F199909CA000D6037 /* CBRTestCase.h */,
+				A7211840199909CA000D6037 /* CBRTestCase.m */,
+				A7211841199909CA000D6037 /* CBRTestDatabase.h */,
+				A7211842199909CA000D6037 /* CBRTestDatabase.m */,
+				A7211843199909CA000D6037 /* CBRTestDataStore.h */,
+				A7211844199909CA000D6037 /* CBRTestDataStore.m */,
+				A7211848199909DA000D6037 /* CBRTestDataStore.xcdatamodeld */,
+				A721184F19990A2B000D6037 /* CloudKitDataBlob.h */,
+				A721185019990A2B000D6037 /* CloudKitDataBlob.m */,
+				A721185219990A2B000D6037 /* CloudKitEntity1.h */,
+				A721185319990A2B000D6037 /* CloudKitEntity1.m */,
+				A721184C19990A2B000D6037 /* CloudKitEntity2.h */,
+				A721184D19990A2B000D6037 /* CloudKitEntity2.m */,
 				6003F5B8195388D20070C39A /* InfoPlist.strings */,
+				A721183519990953000D6037 /* picture.jpg */,
+				6003F5B7195388D20070C39A /* Tests-Info.plist */,
 				606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -172,6 +210,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A721183619990953000D6037 /* picture.jpg in Resources */,
 				6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,8 +255,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A72118281998E2E8000D6037 /* CBRManagedObjectToCKRecordTransformerTests.m in Sources */,
-				A72118261998E2A6000D6037 /* CBRCloudKitConnectionTests.m in Sources */,
+				A721184E19990A2B000D6037 /* CloudKitEntity2.m in Sources */,
+				A721183D199909C2000D6037 /* CBRCloudKitConnectionTests.m in Sources */,
+				A7211847199909CA000D6037 /* CBRTestDataStore.m in Sources */,
+				A721183E199909C2000D6037 /* CBRManagedObjectToRecordTransformerTests.m in Sources */,
+				A721184A199909DA000D6037 /* CBRTestDataStore.xcdatamodeld in Sources */,
+				A721185419990A2B000D6037 /* CloudKitEntity1.m in Sources */,
+				A721185119990A2B000D6037 /* CloudKitDataBlob.m in Sources */,
+				A7211846199909CA000D6037 /* CBRTestDatabase.m in Sources */,
+				A7211845199909CA000D6037 /* CBRTestCase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,6 +357,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 65ABAC42E8B84464B041B7F3 /* Pods-CBRCloudKitConnection.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -323,7 +370,10 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Tests/CBRCloudKitConnection-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -333,6 +383,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 65ABAC42E8B84464B041B7F3 /* Pods-CBRCloudKitConnection.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -341,7 +392,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Tests/CBRCloudKitConnection-Bridging-Header.h";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -369,6 +422,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A7211848199909DA000D6037 /* CBRTestDataStore.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A7211849199909DA000D6037 /* CDCTestDataStore.xcdatamodel */,
+			);
+			currentVersion = A7211849199909DA000D6037 /* CDCTestDataStore.xcdatamodel */;
+			path = CBRTestDataStore.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 6003F582195388D10070C39A /* Project object */;
 }
