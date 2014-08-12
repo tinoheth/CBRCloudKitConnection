@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/cocoapods/l/CloudBridge.svg?style=flat)](http://cocoadocs.org/docsets/CloudBridge)
 [![Platform](https://img.shields.io/cocoapods/p/CloudBridge.svg?style=flat)](http://cocoadocs.org/docsets/CloudBridge)
 
-CloudBridge helps You synchronize Your CoreData objects with various Cloud backends and ships with nativ support for RESTful JSON backends and CloudKit.
+CloudBridge helps synchronizing Your CoreData managed objects with various Cloud backends and ships with nativ support for RESTful JSON backends and CloudKit.
 
 ## Public API
 
@@ -14,7 +14,7 @@ CloudBridge exposes the following convenience methods on `NSManagedObject`:
 ```
 + (void)fetchObjectsMatchingPredicate:(NSPredicate *)predicate
                 withCompletionHandler:(void(^)(NSArray *fetchedObjects, NSError *error))completionHandler;
-                
+
 - (void)fetchObjectsForRelationship:(NSString *)relationship withCompletionHandler:(void(^)(NSArray *objects, NSError *error))completionHandler;
 
 - (void)createWithCompletionHandler:(void(^)(id managedObject, NSError *error))completionHandler;
@@ -23,7 +23,7 @@ CloudBridge exposes the following convenience methods on `NSManagedObject`:
 - (void)deleteWithCompletionHandler:(void(^)(NSError *error))completionHandler;
 ```
 
-which can be called from any `NSManagedObjectContext` thread and are routed to the managed objects `CBRCloudBridge`. The callbacks are always guaranteed to be delivered on the main thread.
+which can be called from any `NSManagedObjectContext` thread and are routed through the managed objects `CBRCloudBridge`. The callbacks are always guaranteed to be delivered on the main thread.
 
 ## Quick start
 
@@ -77,9 +77,9 @@ CBRCloudBridge *cloudBridge = [[CBRCloudBridge alloc] initWithCloudConnection:co
 ```
 NSURL *serverURL = ...;
 MyCoreDataStack *stack = [MyCoreDataStack sharedInstance];
-CBRRESTConnection *connection = [[CBRRESTConnection alloc] initWithBaseURL:serverURL];
 
-// configure Your property mapping
+id<CBRPropertyMapping> propertyMapping = [[CBRUnderscoredPropertyMapping alloc] init];
+CBRRESTConnection *connection = [[CBRRESTConnection alloc] initWithBaseURL:serverURL propertyMapping:propertyMapping];
 
 CBRCloudBridge *cloudBridge = [[CBRCloudBridge alloc] initWithCloudConnection:connection coreDataStack:stack];
 [NSManagedObject setCloudBridge:cloudBridge];
@@ -94,13 +94,14 @@ it, simply add the following line to your Podfile:
 
     pod "CloudBridge"
 
-## Dependency status
+## Components status
 
 | Component | State | Version | License | Platform |
 |-----------|-------|---------|---------|----------|
-| [CBRManagedObjectCache](https://github.com/Cloud-Bridge/CBRManagedObjectCache) | [![CI Status](http://img.shields.io/travis/Cloud-Bridge/CBRManagedObjectCache.svg?style=flat)](https://travis-ci.org/Cloud-Bridge/CBRManagedObjectCache) | [![Version](https://img.shields.io/cocoapods/v/CBRManagedObjectCache.svg?style=flat)](http://cocoadocs.org/docsets/CBRManagedObjectCache) | [![License](https://img.shields.io/cocoapods/l/CBRManagedObjectCache.svg?style=flat)](http://cocoadocs.org/docsets/CBRManagedObjectCache) | [![Platform](https://img.shields.io/cocoapods/p/CBRManagedObjectCache.svg?style=flat)](http://cocoadocs.org/docsets/CBRManagedObjectCache) |
+| [CloudBridge](https://github.com/Cloud-Bridge/CloudBridge) | [![CI Status](http://img.shields.io/travis/Cloud-Bridge/CloudBridge.svg?style=flat)](https://travis-ci.org/Cloud-Bridge/CloudBridge) | [![Version](https://img.shields.io/cocoapods/v/CloudBridge.svg?style=flat)](http://cocoadocs.org/docsets/CloudBridge) | [![License](https://img.shields.io/cocoapods/l/CloudBridge.svg?style=flat)](http://cocoadocs.org/docsets/CloudBridge) | [![Platform](https://img.shields.io/cocoapods/p/CloudBridge.svg?style=flat)](http://cocoadocs.org/docsets/CloudBridge) |
 | [CBRRESTConnection](https://github.com/Cloud-Bridge/CBRRESTConnection) | [![CI Status](http://img.shields.io/travis/Cloud-Bridge/CBRRESTConnection.svg?style=flat)](https://travis-ci.org/Cloud-Bridge/CBRRESTConnection) | [![Version](https://img.shields.io/cocoapods/v/CBRRESTConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRRESTConnection) | [![License](https://img.shields.io/cocoapods/l/CBRRESTConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRRESTConnection) | [![Platform](https://img.shields.io/cocoapods/p/CBRRESTConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRRESTConnection) |
 | [CBRCloudKitConnection](https://github.com/Cloud-Bridge/CBRCloudKitConnection) | [![CI Status](http://img.shields.io/travis/Cloud-Bridge/CBRCloudKitConnection.svg?style=flat)](https://travis-ci.org/Cloud-Bridge/CBRCloudKitConnection) | [![Version](https://img.shields.io/cocoapods/v/CBRCloudKitConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRCloudKitConnection) | [![License](https://img.shields.io/cocoapods/l/CBRCloudKitConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRCloudKitConnection) | [![Platform](https://img.shields.io/cocoapods/p/CBRCloudKitConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRCloudKitConnection) |
+| [CBRManagedObjectCache](https://github.com/Cloud-Bridge/CBRManagedObjectCache) | [![CI Status](http://img.shields.io/travis/Cloud-Bridge/CBRManagedObjectCache.svg?style=flat)](https://travis-ci.org/Cloud-Bridge/CBRManagedObjectCache) | [![Version](https://img.shields.io/cocoapods/v/CBRManagedObjectCache.svg?style=flat)](http://cocoadocs.org/docsets/CBRManagedObjectCache) | [![License](https://img.shields.io/cocoapods/l/CBRManagedObjectCache.svg?style=flat)](http://cocoadocs.org/docsets/CBRManagedObjectCache) | [![Platform](https://img.shields.io/cocoapods/p/CBRManagedObjectCache.svg?style=flat)](http://cocoadocs.org/docsets/CBRManagedObjectCache) |
 
 ## Author
 

@@ -34,14 +34,6 @@
         return YES;
     }
 
-    if ([self.name isEqualToString:NSStringFromSelector(@selector(hasUnsyncedCloudKitChanges))]) {
-        return YES;
-    }
-
-    if ([self.name isEqualToString:NSStringFromSelector(@selector(hasPendingCloudKitDeletion))]) {
-        return YES;
-    }
-
     if ([self.userInfo[@"cloudKitDisabled"] isEqual:@"1"]) {
         return YES;
     }

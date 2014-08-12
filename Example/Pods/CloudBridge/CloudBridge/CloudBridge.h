@@ -23,10 +23,13 @@
 
 @import CoreData;
 
+#import <SLCoreDataStack.h>
 #import <CBRManagedObjectCache.h>
 
 #import <CBRCloudBridge.h>
 #import <CBRCloudObject.h>
 #import <CBRCloudConnection.h>
+
+#import <NSManagedObject+CloudBridgeSubclassHooks.h>
 #import <NSManagedObject+CloudBridge.h>
 #import <CBRManagedObjectToCloudObjectTransformer.h>

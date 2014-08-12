@@ -23,6 +23,6 @@ Pod::Spec.new do |s|
   s.source_files = 'CBRCloudKitConnection'
 
   s.frameworks = 'CloudKit'
-  s.dependency 'CloudBridge', '~> 1.0'
+  s.dependency 'CloudBridge', '~> 0.5'
   s.prefix_header_contents = '#ifndef NS_DESIGNATED_INITIALIZER', '#define NS_DESIGNATED_INITIALIZER', '#endif'
 end

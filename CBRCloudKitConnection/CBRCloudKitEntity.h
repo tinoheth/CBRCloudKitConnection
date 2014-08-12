@@ -28,13 +28,5 @@
 @protocol CBRCloudKitEntity <NSObject>
 
 @property (nonatomic, strong) NSString *recordIDString;
-@property (nonatomic, strong) NSNumber *hasUnsyncedCloudKitChanges;
-@property (nonatomic, strong) NSNumber *hasPendingCloudKitDeletion;
-
-@optional
-- (void)awakeFromCloudKitFetch;
-
-@optional
-- (void)setCloudKitValue:(id)value forKey:(NSString *)key fromRecord:(CKRecord *)record;
 
 @end

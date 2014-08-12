@@ -45,22 +45,13 @@
 - (instancetype)initWithDatabase:(CKDatabase *)database NS_DESIGNATED_INITIALIZER;
 
 /**
- `CBRCloudKitConnection` supports an offline mode. When `isRunningInOfflineMode` is `YES`, no data will be send to CloudKit and `CBRCloudKitEntity.hasUnsyncedCloudKitChanges` and `CBRCloudKitEntity.hasPendingCloudKitDeletion` will be updated accordingly.
+ The CloudKit database.
  */
-@property (nonatomic, readonly) BOOL isInOfflineMode;
-
-/**
- Switched into offline mode.
- */
-- (void)enableOfflineMode;
-
-/**
- Syncs all pending CloudKit changes and disabled offline mode.
- */
-- (void)reenableCloudSyncWithCompletionHandler:(void(^)(NSError *error))completionHandler;
-
 @property (nonatomic, readonly) CKDatabase *database;
 
+/**
+ Object transformer as `CBRManagedObjectToCKRecordTransformer`.
+ */
 @property (nonatomic, readonly) CBRManagedObjectToCKRecordTransformer *objectTransformer;
 
 - (void)createCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void(^)(CKRecord *cloudObject, NSError *error))completionHandler;

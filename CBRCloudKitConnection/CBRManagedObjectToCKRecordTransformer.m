@@ -28,6 +28,7 @@
 #import <NSAttributeDescription+CBRManagedObjectToCKRecordTransformer.h>
 #import <NSRelationshipDescription+CBRManagedObjectToCKRecordTransformer.h>
 #import <CBRManagedObjectCache.h>
+#import <NSManagedObject+CloudBridgeSubclassHooks.h>
 
 static NSURL *newTemporaryAssetURL(void)
 {
@@ -84,7 +85,7 @@ static NSURL *newTemporaryAssetURL(void)
     NSParameterAssert(entity);
 
     for (NSAttributeDescription *attributeDescription in entity.attributesByName.allValues) {
-        id value = [managedObject valueForKey:attributeDescription.name] ?: [self _defaultValueForAttributeDescription:attributeDescription];
+        id value = [managedObject cloudValueForKey:attributeDescription.name] ?: [self _defaultValueForAttributeDescription:attributeDescription];
 
         if (![self _canApplyValue:value fromCloudKitEntity:managedObject toRecord:record forAttributeDescription:attributeDescription]) {
             continue;
@@ -133,9 +134,7 @@ static NSURL *newTemporaryAssetURL(void)
         managedObject = [NSEntityDescription insertNewObjectForEntityForName:entity.name
                                                        inManagedObjectContext:managedObjectContext];
 
-        if ([managedObject respondsToSelector:@selector(awakeFromCloudKitFetch)]) {
-            [managedObject awakeFromCloudKitFetch];
-        }
+        [managedObject awakeFromCloudFetch];
     }
 
     [self updateManagedObject:managedObject withPropertiesFromCloudObject:record];
@@ -188,13 +187,9 @@ static NSURL *newTemporaryAssetURL(void)
                 continue;
             }
 
-            id currentValue = [managedObject valueForKey:key];
+            id currentValue = [managedObject cloudValueForKey:key];
             if (currentValue != value && ![currentValue isEqual:value]) {
-                if ([managedObject respondsToSelector:@selector(setCloudKitValue:forKey:fromRecord:)]) {
-                    [managedObject setCloudKitValue:value forKey:key fromRecord:record];
-                } else {
-                    [managedObject setValue:value forKey:key];
-                }
+                [managedObject setCloudValue:value forKey:key fromCloudObject:record];
             }
         }
     }

@@ -5,9 +5,13 @@
 [![License](https://img.shields.io/cocoapods/l/CBRCloudKitConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRCloudKitConnection)
 [![Platform](https://img.shields.io/cocoapods/p/CBRCloudKitConnection.svg?style=flat)](http://cocoadocs.org/docsets/CBRCloudKitConnection)
 
+`CBRCloudKitConnection` is a [CloudBridge](https://github.com/Cloud-Bridge/CloudBridge) connection for CloudKit.
+
 ## Usage
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+`CBRRESTConnection` maps `NSManagedObject` to `CKRecord` instances.
+
+
 
 ## Requirements
 
@@ -25,4 +29,3 @@ Oliver Letterer, oliver.letterer@gmail.com
 ## License
 
 CBRCloudKitConnection is available under the MIT license. See the LICENSE file for more info.
-
