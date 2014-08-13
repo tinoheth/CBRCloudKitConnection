@@ -146,50 +146,49 @@ static NSURL *newTemporaryAssetURL(void)
     NSEntityDescription *entity = managedObject.entity;
     NSParameterAssert(entity);
 
-    for (NSString *key in record.allKeys) {
-        id value = record[key];
+    for (NSAttributeDescription *attributeDescription in entity.attributesByName.allValues) {
+        id value = record[attributeDescription.name];
 
-        NSRelationshipDescription *relationshipDescription = entity.relationshipsByName[key];
-        NSAttributeDescription *attributeDescription = entity.attributesByName[key];
+        if (![self _canApplyValue:value fromRecord:record toCloudKitEntity:managedObject forAttributeDescription:attributeDescription]) {
+            continue;
+        }
 
-        if (relationshipDescription) {
-            if (![self _canApplyValue:value fromRecord:record toCloudKitEntity:managedObject forRelationshitDescription:relationshipDescription]) {
-                continue;
+        id currentValue = [managedObject cloudValueForKey:attributeDescription.name];
+        if (currentValue != value && ![currentValue isEqual:value]) {
+            [managedObject setCloudValue:value forKey:attributeDescription.name fromCloudObject:record];
+        }
+    }
+
+    for (NSRelationshipDescription *relationshipDescription in entity.relationshipsByName.allValues) {
+        id value = record[relationshipDescription.name];
+
+        if (![self _canApplyValue:value fromRecord:record toCloudKitEntity:managedObject forRelationshitDescription:relationshipDescription]) {
+            continue;
+        }
+
+        if (relationshipDescription.cloudKitAssetDataKeyPath) {
+            NSString *dataKeyPath = relationshipDescription.cloudKitAssetDataKeyPath;
+            NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:relationshipDescription.destinationEntity.name
+                                                                       inManagedObjectContext:managedObject.managedObjectContext];
+
+            NSData *data = nil;
+            if ([value isKindOfClass:[CKAsset class]]) {
+                CKAsset *asset = value;
+                data = [NSData dataWithContentsOfURL:asset.fileURL];
             }
+            [newObject setValue:data forKey:dataKeyPath];
 
-            if (relationshipDescription.cloudKitAssetDataKeyPath) {
-                NSString *dataKeyPath = relationshipDescription.cloudKitAssetDataKeyPath;
-                NSManagedObject *newObject = [NSEntityDescription insertNewObjectForEntityForName:relationshipDescription.destinationEntity.name
-                                                                           inManagedObjectContext:managedObject.managedObjectContext];
-
-                NSData *data = nil;
-                if ([value isKindOfClass:[CKAsset class]]) {
-                    CKAsset *asset = value;
-                    data = [NSData dataWithContentsOfURL:asset.fileURL];
-                }
-                [newObject setValue:data forKey:dataKeyPath];
-
-                NSData *currentData = [managedObject valueForKeyPath:[NSString stringWithFormat:@"%@.%@", relationshipDescription.name, dataKeyPath]];
-                if (![currentData isEqual:data] && currentData != data) {
-                    [managedObject setValue:newObject forKey:relationshipDescription.name];
-                }
-            } else {
-                CKReference *reference = value;
-
-                NSManagedObject<CBRCloudKitEntity> *referencedObject = [managedObject.managedObjectContext.cdc_cache objectOfType:reference.recordID.recordName withValue:reference.recordID.recordIDString forAttribute:@"recordIDString"];
-
-                if (referencedObject) {
-                    [managedObject setValue:referencedObject forKey:relationshipDescription.name];
-                }
+            NSData *currentData = [managedObject valueForKeyPath:[NSString stringWithFormat:@"%@.%@", relationshipDescription.name, dataKeyPath]];
+            if (![currentData isEqual:data] && currentData != data) {
+                [managedObject setValue:newObject forKey:relationshipDescription.name];
             }
         } else {
-            if (![self _canApplyValue:value fromRecord:record toCloudKitEntity:managedObject forAttributeDescription:attributeDescription]) {
-                continue;
-            }
+            CKReference *reference = value;
 
-            id currentValue = [managedObject cloudValueForKey:key];
-            if (currentValue != value && ![currentValue isEqual:value]) {
-                [managedObject setCloudValue:value forKey:key fromCloudObject:record];
+            NSManagedObject<CBRCloudKitEntity> *referencedObject = [managedObject.managedObjectContext.cdc_cache objectOfType:reference.recordID.recordName withValue:reference.recordID.recordIDString forAttribute:@"recordIDString"];
+
+            if (referencedObject) {
+                [managedObject setValue:referencedObject forKey:relationshipDescription.name];
             }
         }
     }

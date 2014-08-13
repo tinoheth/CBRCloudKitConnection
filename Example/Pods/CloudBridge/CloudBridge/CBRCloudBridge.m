@@ -80,11 +80,6 @@
 @end
 
 
-@interface CBRCloudBridge ()
-
-@end
-
-#warning offline mode
 
 @implementation CBRCloudBridge
 
@@ -155,7 +150,7 @@
 
             if (description.deleteEveryOtherObject) {
                 NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:entityDescription.name];
-                fetchRequest.predicate = [NSPredicate predicateWithFormat:@"%K NOT IN %@", managedObjectsIdentifiers];
+                fetchRequest.predicate = [NSPredicate predicateWithFormat:@"NOT %K IN %@", cloudIdentifier, managedObjectsIdentifiers];
 
                 NSError *error = nil;
                 NSArray *objectsToBeDeleted = [context executeFetchRequest:fetchRequest error:&error];
