@@ -62,7 +62,7 @@
     [self _fetchAllRecordsOfQuery:query completionHandler:completionHandler];
 }
 
-- (void)createCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void (^)(CKRecord *, NSError *))completionHandler
+- (void)createCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler
 {
     [self.database saveRecord:cloudObject completionHandler:^(CKRecord *record, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -73,7 +73,7 @@
     }];
 }
 
-- (void)latestCloudObjectForManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void (^)(CKRecord *, NSError *))completionHandler
+- (void)latestCloudObjectForManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler
 {
     [self.database fetchRecordWithID:[CKRecordID recordIDWithRecordIDString:managedObject.recordIDString] completionHandler:^(CKRecord *record, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -84,10 +84,10 @@
     }];
 }
 
-- (void)saveCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void (^)(CKRecord *, NSError *))completionHandler
+- (void)saveCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler
 {
     if (!managedObject.recordIDString) {
-        return [self createCloudObject:cloudObject forManagedObject:managedObject withCompletionHandler:completionHandler];
+        return [self createCloudObject:cloudObject forManagedObject:managedObject withUserInfo:userInfo completionHandler:completionHandler];
     }
 
     [self.database fetchRecordWithID:[CKRecordID recordIDWithRecordIDString:managedObject.recordIDString] completionHandler:^(CKRecord *record, NSError *error) {
@@ -114,7 +114,7 @@
     }];
 }
 
-- (void)deleteCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void (^)(NSError *))completionHandler
+- (void)deleteCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(NSError *error))completionHandler
 {
     NSParameterAssert(managedObject.recordIDString);
     [self.database deleteRecordWithID:[CKRecordID recordIDWithRecordIDString:managedObject.recordIDString] completionHandler:^(CKRecordID *recordID, NSError *error) {

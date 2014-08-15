@@ -54,9 +54,9 @@
  */
 @property (nonatomic, readonly) CBRManagedObjectToCKRecordTransformer *objectTransformer;
 
-- (void)createCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void(^)(CKRecord *cloudObject, NSError *error))completionHandler;
-- (void)latestCloudObjectForManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void(^)(CKRecord * cloudObject, NSError *error))completionHandler;
-- (void)saveCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void(^)(CKRecord * cloudObject, NSError *error))completionHandler;
-- (void)deleteCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withCompletionHandler:(void(^)(NSError *error))completionHandler;
+- (void)createCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler;
+- (void)latestCloudObjectForManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler;
+- (void)saveCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler;
+- (void)deleteCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(NSError *error))completionHandler;
 
 @end
