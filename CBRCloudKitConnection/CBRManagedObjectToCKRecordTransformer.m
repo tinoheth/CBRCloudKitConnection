@@ -128,7 +128,7 @@ static NSURL *newTemporaryAssetURL(void)
                                             forEntity:(NSEntityDescription *)entity
                                inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    NSManagedObject<CBRCloudKitEntity> *managedObject = [managedObjectContext.cdc_cache objectOfType:entity.name withValue:record.recordID.recordIDString forAttribute:@"recordIDString"];
+    NSManagedObject<CBRCloudKitEntity> *managedObject = [managedObjectContext.cbr_cache objectOfType:entity.name withValue:record.recordID.recordIDString forAttribute:@"recordIDString"];
 
     if (!managedObject) {
         managedObject = [NSEntityDescription insertNewObjectForEntityForName:entity.name
@@ -185,7 +185,7 @@ static NSURL *newTemporaryAssetURL(void)
         } else {
             CKReference *reference = value;
 
-            NSManagedObject<CBRCloudKitEntity> *referencedObject = [managedObject.managedObjectContext.cdc_cache objectOfType:reference.recordID.recordName withValue:reference.recordID.recordIDString forAttribute:@"recordIDString"];
+            NSManagedObject<CBRCloudKitEntity> *referencedObject = [managedObject.managedObjectContext.cbr_cache objectOfType:reference.recordID.recordName withValue:reference.recordID.recordIDString forAttribute:@"recordIDString"];
 
             if (referencedObject) {
                 [managedObject setValue:referencedObject forKey:relationshipDescription.name];

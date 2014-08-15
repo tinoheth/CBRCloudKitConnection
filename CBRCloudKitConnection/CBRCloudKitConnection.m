@@ -27,7 +27,6 @@
 
 #import <CBRManagedObjectToCKRecordTransformer.h>
 #import <CKRecordID+CBRCloudKitConnection.h>
-#import <NSManagedObjectContext+SLRESTfulCoreData.h>
 
 
 
