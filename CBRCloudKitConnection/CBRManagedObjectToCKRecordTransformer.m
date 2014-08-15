@@ -122,6 +122,8 @@ static NSURL *newTemporaryAssetURL(void)
             }
         }
     }
+
+    [managedObject prepareMutableCloudObject:record];
 }
 
 - (id<CBRCloudKitEntity>)managedObjectFromCloudObject:(CKRecord *)record
@@ -143,6 +145,8 @@ static NSURL *newTemporaryAssetURL(void)
 
 - (void)updateManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withPropertiesFromCloudObject:(CKRecord *)record
 {
+    [managedObject prepareForUpdateWithMutableCloudObject:record];
+
     NSEntityDescription *entity = managedObject.entity;
     NSParameterAssert(entity);
 

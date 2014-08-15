@@ -28,7 +28,7 @@
 
 
 
-@interface CKRecord (CBRCloudKitConnection) <CBRCloudObject>
+@interface CKRecord (CBRCloudKitConnection) <CBRCloudObject, CBRMutableCloudObject>
 
 - (NSEntityDescription *)entityInManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 

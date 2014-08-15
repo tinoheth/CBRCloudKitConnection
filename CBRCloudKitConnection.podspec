@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "CBRCloudKitConnection"
-  s.version          = "0.5.3"
+  s.version          = "0.6.0"
   s.summary          = "CloudBridgeConnection for CloudKit."
   s.homepage         = "https://github.com/Cloud-Bridge/CBRCloudKitConnection"
   s.license          = 'MIT'
@@ -23,6 +23,6 @@ Pod::Spec.new do |s|
   s.source_files = 'CBRCloudKitConnection'
 
   s.frameworks = 'CloudKit'
-  s.dependency 'CloudBridge', '~> 0.5'
+  s.dependency 'CloudBridge', '~> 0.6.0'
   s.prefix_header_contents = '#ifndef NS_DESIGNATED_INITIALIZER', '#define NS_DESIGNATED_INITIALIZER', '#endif'
 end
