@@ -55,6 +55,7 @@
 
 - (void)fetchCloudObjectsForEntity:(NSEntityDescription *)entity
                      withPredicate:(NSPredicate *)predicate
+                          userInfo:(NSDictionary *)userInfo
                  completionHandler:(void(^)(NSArray *fetchedObjects, NSError *error))completionHandler
 {
     predicate = [self _predicateByTransformingPredicate:predicate ?: [NSPredicate predicateWithValue:YES]];

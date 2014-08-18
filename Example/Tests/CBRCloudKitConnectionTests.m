@@ -47,7 +47,7 @@
     entity.recordIDString = self.recordID.recordIDString;
 
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND inverseRelationship == %@", entity.stringValue, entity];
-    [self.connection fetchCloudObjectsForEntity:entity.entity withPredicate:predicate completionHandler:NULL];
+    [self.connection fetchCloudObjectsForEntity:entity.entity withPredicate:predicate userInfo:nil completionHandler:NULL];
 
     expect(self.database.operations).to.haveCountOf(1);
     CKQueryOperation *operation = self.database.operations.firstObject;

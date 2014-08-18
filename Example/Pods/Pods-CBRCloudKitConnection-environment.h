@@ -9,7 +9,7 @@
 // CBRCloudKitConnection
 #define COCOAPODS_POD_AVAILABLE_CBRCloudKitConnection
 #define COCOAPODS_VERSION_MAJOR_CBRCloudKitConnection 0
-#define COCOAPODS_VERSION_MINOR_CBRCloudKitConnection 7
+#define COCOAPODS_VERSION_MINOR_CBRCloudKitConnection 8
 #define COCOAPODS_VERSION_PATCH_CBRCloudKitConnection 0
 
 // CBRManagedObjectCache
@@ -21,7 +21,7 @@
 // CloudBridge
 #define COCOAPODS_POD_AVAILABLE_CloudBridge
 #define COCOAPODS_VERSION_MAJOR_CloudBridge 0
-#define COCOAPODS_VERSION_MINOR_CloudBridge 7
+#define COCOAPODS_VERSION_MINOR_CloudBridge 8
 #define COCOAPODS_VERSION_PATCH_CloudBridge 0
 
 // Expecta
