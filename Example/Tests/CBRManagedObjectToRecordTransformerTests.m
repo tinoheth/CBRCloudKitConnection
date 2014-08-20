@@ -104,7 +104,7 @@
     expect(remoteData).to.equal(data);
 }
 
-- (void)testThatTransformerIncludesCKReferenceForToOneRelationship
+- (void)testThatTransformerIncludesCKReferenceWithNullifyDeleteRule
 {
     CloudKitEntity1 *entity1 = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([CloudKitEntity1 class])
                                                              inManagedObjectContext:self.context];
@@ -115,8 +115,27 @@
     entity2.entity1 = entity1;
 
     CKRecord *record = [self.transformer cloudObjectFromManagedObject:entity2];
-    expect(record[@"entity1"]).toNot.beNil();
-    expect(record[@"entity1"]).to.equal([[CKReference alloc] initWithRecordID:self.recordID action:CKReferenceActionDeleteSelf]);
+    CKReference *reference = record[@"entity1"];
+    
+    expect(reference.recordID).to.equal(self.recordID);
+    expect(reference.referenceAction).to.equal(CKReferenceActionNone);
+}
+
+- (void)testThatTransformerIncludesCKReferenceWithCascade
+{
+    CloudKitEntity1 *entity1 = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([CloudKitEntity1 class])
+                                                             inManagedObjectContext:self.context];
+    entity1.recordIDString = self.recordID.recordIDString;
+
+    CloudKitEntity2 *entity2 = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([CloudKitEntity2 class])
+                                                             inManagedObjectContext:self.context];
+    entity2.cascadingEntity1 = entity1;
+
+    CKRecord *record = [self.transformer cloudObjectFromManagedObject:entity2];
+    CKReference *reference = record[@"cascadingEntity1"];
+
+    expect(reference.recordID).to.equal(self.recordID);
+    expect(reference.referenceAction).to.equal(CKReferenceActionDeleteSelf);
 }
 
 - (void)testThatTransformerUpdatesRelationshipFromCKReference
@@ -130,7 +149,7 @@
     NSAssert(saveError == nil, @"error saving NSManagedObjectContext: %@", saveError);
 
     CKRecord *record = [[CKRecord alloc] initWithRecordType:NSStringFromClass([CloudKitEntity2 class])];
-    record[@"entity1"] = [[CKReference alloc] initWithRecordID:self.recordID action:CKReferenceActionDeleteSelf];
+    record[@"entity1"] = [[CKReference alloc] initWithRecordID:self.recordID action:CKReferenceActionNone];
 
     CloudKitEntity2 *entity2 = [self.transformer managedObjectFromCloudObject:record forEntity:[record entityInManagedObjectContext:self.context] inManagedObjectContext:self.context];
     expect(entity2.entity1).to.equal(entity1);

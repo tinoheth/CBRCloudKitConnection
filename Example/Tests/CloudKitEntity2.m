@@ -16,6 +16,6 @@
 @dynamic hasUnsyncedCloudKitChanges;
 @dynamic recordIDString;
 @dynamic stringValue;
-@dynamic entity1;
+@dynamic entity1, cascadingEntity1;
 
 @end

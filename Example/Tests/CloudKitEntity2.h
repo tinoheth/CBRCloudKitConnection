@@ -19,5 +19,6 @@
 @property (nonatomic, retain) NSString * recordIDString;
 @property (nonatomic, retain) NSString * stringValue;
 @property (nonatomic, retain) CloudKitEntity1 *entity1;
+@property (nonatomic, strong) CloudKitEntity1 *cascadingEntity1;
 
 @end

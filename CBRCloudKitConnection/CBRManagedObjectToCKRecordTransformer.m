@@ -116,7 +116,9 @@ static NSURL *newTemporaryAssetURL(void)
             NSManagedObject<CBRCloudKitEntity> *parentEntity = [managedObject valueForKey:relationshipDescription.name];
             if (parentEntity) {
                 NSParameterAssert(parentEntity.recordIDString);
-                record[relationshipDescription.name] = [[CKReference alloc] initWithRecordID:[CKRecordID recordIDWithRecordIDString:parentEntity.recordIDString] action:CKReferenceActionDeleteSelf];
+
+                CKReferenceAction action = relationshipDescription.inverseRelationship.deleteRule == NSCascadeDeleteRule ? CKReferenceActionDeleteSelf : CKReferenceActionNone;
+                record[relationshipDescription.name] = [[CKReference alloc] initWithRecordID:[CKRecordID recordIDWithRecordIDString:parentEntity.recordIDString] action:action];
             } else {
                 record[relationshipDescription.name] = nil;
             }
