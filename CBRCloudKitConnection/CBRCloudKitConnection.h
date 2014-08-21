@@ -39,7 +39,7 @@
  
  @warning: Only works with entities conforming to the `CBRCloudKitEntity` protocol.
  */
-@interface CBRCloudKitConnection : NSObject <CBRCloudConnection>
+@interface CBRCloudKitConnection : NSObject <CBRCloudConnection, CBROfflineCapableCloudConnection>
 
 - (instancetype)init UNAVAILABLE_ATTRIBUTE;
 - (instancetype)initWithDatabase:(CKDatabase *)database NS_DESIGNATED_INITIALIZER;
