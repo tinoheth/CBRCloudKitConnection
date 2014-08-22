@@ -132,6 +132,8 @@
 - (void)bulkCreateCloudObjects:(NSArray *)cloudObjects forManagedObjects:(NSArray *)managedObjects completionHandler:(void (^)(NSArray *cloudObjects, NSError *error))completionHandler
 {
     CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:cloudObjects recordIDsToDelete:nil];
+    operation.savePolicy = CKRecordSaveAllKeys;
+
     [operation setModifyRecordsCompletionBlock:^(NSArray *savedRecords, NSArray *deletedRecordIDs, NSError *operationError) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completionHandler(savedRecords, operationError);
@@ -143,6 +145,8 @@
 - (void)bulkSaveCloudObjects:(NSArray *)cloudObjects forManagedObjects:(NSArray *)managedObjects completionHandler:(void (^)(NSArray *cloudObjects, NSError *error))completionHandler
 {
     CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:cloudObjects recordIDsToDelete:nil];
+    operation.savePolicy = CKRecordSaveAllKeys;
+
     [operation setModifyRecordsCompletionBlock:^(NSArray *savedRecords, NSArray *deletedRecordIDs, NSError *operationError) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completionHandler(savedRecords, operationError);

@@ -34,6 +34,8 @@
 
 @property (nonatomic, readonly) BOOL isRunningInOfflineMode;
 - (void)enableOfflineMode;
+
+@property (nonatomic, readonly) BOOL isReenablingOnlineMode;
 - (void)reenableOnlineModeWithCompletionHandler:(void(^)(NSError *error))completionHandler;
 
 @property (nonatomic, readonly) id<CBROfflineCapableCloudConnection> cloudConnection;
