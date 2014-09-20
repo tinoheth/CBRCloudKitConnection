@@ -22,6 +22,7 @@
  */
 
 #import "CBRCloudBridge.h"
+#import "NSRelationshipDescription+CloudBridge.h"
 
 @interface _CBRCloudBridgePredicateDescription : NSObject
 
@@ -56,6 +57,7 @@
 
                 _relationshipToUpdate = relationshipDescription.name;
                 _parentObjectID = managedObject.objectID;
+                _deleteEveryOtherObject = relationshipDescription.cloudBridgeCascades;
             }
         }];
     }
@@ -99,7 +101,7 @@
 - (instancetype)initWithCloudConnection:(id<CBRCloudConnection>)cloudConnection coreDataStack:(SLCoreDataStack *)coreDataStack
 {
     NSParameterAssert(cloudConnection);
-    
+
     if (self = [super init]) {
         _cloudConnection = cloudConnection;
         _coreDataStack = coreDataStack;
@@ -159,6 +161,17 @@
                 NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:entityDescription.name];
                 fetchRequest.predicate = [NSPredicate predicateWithFormat:@"NOT %K IN %@", cloudIdentifier, managedObjectsIdentifiers];
 
+                if (description.relationshipToUpdate) {
+                    NSRelationshipDescription *relationship = entityDescription.relationshipsByName[description.relationshipToUpdate];
+
+                    if (!relationship.isToMany) {
+                        NSManagedObject *parentObject = [context objectWithID:description.parentObjectID];
+                        NSPredicate *newPredicate = [NSPredicate predicateWithFormat:@"%K == %@", relationship.name, parentObject];
+
+                        fetchRequest.predicate = [[NSCompoundPredicate alloc] initWithType:NSAndPredicateType subpredicates:@[ fetchRequest.predicate, newPredicate ]];
+                    }
+                }
+
                 NSError *error = nil;
                 NSArray *objectsToBeDeleted = [context executeFetchRequest:fetchRequest error:&error];
                 NSAssert(error == nil, @"error fetching data: %@", error);
@@ -210,10 +223,8 @@
     }
 
     NSManagedObjectContext *context = self.backgroundThreadManagedObjectContext;
-    [context performBlock:^(NSManagedObject *backgroundManagedObject) {
-        id<CBRCloudObject> cloudObject = [self.cloudConnection.objectTransformer cloudObjectFromManagedObject:backgroundManagedObject];
-
-        [self.cloudConnection createCloudObject:cloudObject forManagedObject:backgroundManagedObject withUserInfo:userInfo completionHandler:^(id<CBRCloudObject> cloudObject, NSError *error) {
+    [self _transformManagedObject:managedObject toCloudObjectWithCompletionHandler:^(id<CBRCloudObject> cloudObject) {
+        [self.cloudConnection createCloudObject:cloudObject forManagedObject:managedObject withUserInfo:userInfo completionHandler:^(id<CBRCloudObject> cloudObject, NSError *error) {
             if (error) {
                 if (completionHandler) {
                     completionHandler(nil, error);
@@ -221,7 +232,13 @@
                 return;
             }
 
-            [context performBlock:^{
+            if (managedObject.hasChanges || managedObject.isInserted) {
+                NSError *saveError = nil;
+                [managedObject.managedObjectContext save:&saveError];
+                NSAssert(saveError == nil, @"error saving NSManagedObjectContext: %@", saveError);
+            }
+
+            [context performBlock:^(NSManagedObject *backgroundManagedObject) {
                 [self.cloudConnection.objectTransformer updateManagedObject:backgroundManagedObject withPropertiesFromCloudObject:cloudObject];
 
                 NSError *saveError = nil;
@@ -233,9 +250,9 @@
                         completionHandler(mainManagedObject, nil);
                     }
                 } withObject:backgroundManagedObject];
-            }];
+            } withObject:managedObject];
         }];
-    } withObject:managedObject];
+    }];
 }
 
 - (void)reloadManagedObject:(NSManagedObject *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)(id managedObject, NSError *error))completionHandler
@@ -280,10 +297,8 @@
     }
 
     NSManagedObjectContext *context = self.backgroundThreadManagedObjectContext;
-    [context performBlock:^(NSManagedObject *backgroundManagedObject) {
-        id<CBRCloudObject> cloudObject = [self.cloudConnection.objectTransformer cloudObjectFromManagedObject:backgroundManagedObject];
-
-        [self.cloudConnection saveCloudObject:cloudObject forManagedObject:backgroundManagedObject withUserInfo:userInfo completionHandler:^(id<CBRCloudObject> cloudObject, NSError *error) {
+    [self _transformManagedObject:managedObject toCloudObjectWithCompletionHandler:^(id<CBRCloudObject> cloudObject) {
+        [self.cloudConnection saveCloudObject:cloudObject forManagedObject:managedObject withUserInfo:userInfo completionHandler:^(id<CBRCloudObject> cloudObject, NSError *error) {
             if (error) {
                 if (completionHandler) {
                     completionHandler(nil, error);
@@ -291,7 +306,7 @@
                 return;
             }
 
-            [context performBlock:^{
+            [context performBlock:^(NSManagedObject *backgroundManagedObject) {
                 [self.cloudConnection.objectTransformer updateManagedObject:backgroundManagedObject withPropertiesFromCloudObject:cloudObject];
 
                 NSError *saveError = nil;
@@ -303,9 +318,10 @@
                         completionHandler(mainManagedObject, nil);
                     }
                 } withObject:backgroundManagedObject];
-            }];
+            } withObject:managedObject];
         }];
-    } withObject:managedObject];
+    }];
+
 }
 
 - (void)deleteManagedObject:(NSManagedObject *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)(NSError *error))completionHandler
@@ -317,9 +333,7 @@
     }
 
     NSManagedObjectContext *context = self.backgroundThreadManagedObjectContext;
-    [context performBlock:^(NSManagedObject *backgroundManagedObject) {
-        id<CBRCloudObject> cloudObject = [self.cloudConnection.objectTransformer cloudObjectFromManagedObject:backgroundManagedObject];
-
+    [self _transformManagedObject:managedObject toCloudObjectWithCompletionHandler:^(id<CBRCloudObject> cloudObject) {
         [self.cloudConnection deleteCloudObject:cloudObject forManagedObject:managedObject withUserInfo:userInfo completionHandler:^(NSError *error) {
             if (error) {
                 if (completionHandler) {
@@ -328,7 +342,7 @@
                 return;
             }
 
-            [context performBlock:^{
+            [context performBlock:^(NSManagedObject *backgroundManagedObject) {
                 [context deleteObject:backgroundManagedObject];
 
                 NSError *saveError = nil;
@@ -340,11 +354,29 @@
                         completionHandler(nil);
                     }
                 });
-            }];
+            } withObject:managedObject];
         }];
-    } withObject:managedObject];
+    }];
 }
 
 #pragma mark - Private category implementation ()
+
+- (void)_transformManagedObject:(NSManagedObject *)managedObject toCloudObjectWithCompletionHandler:(void(^)(id<CBRCloudObject> cloudObject))completionHandler
+{
+    NSParameterAssert(completionHandler);
+
+    if (self.transformsManagedObjectsSynchronous) {
+        return completionHandler([self.cloudConnection.objectTransformer cloudObjectFromManagedObject:managedObject]);
+    }
+
+    NSManagedObjectContext *context = self.backgroundThreadManagedObjectContext;
+    [context performBlock:^(NSManagedObject *backgroundManagedObject) {
+        id<CBRCloudObject> cloudObject = [self.cloudConnection.objectTransformer cloudObjectFromManagedObject:backgroundManagedObject];
+
+        [managedObject.managedObjectContext performBlock:^{
+            completionHandler(cloudObject);
+        }];
+    } withObject:managedObject];
+}
 
 @end

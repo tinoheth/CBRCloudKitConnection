@@ -1,5 +1,5 @@
 /**
- CloudBridge
+ CBRCloudKitConnection
  Copyright (c) 2014 Oliver Letterer <oliver.letterer@gmail.com>, Sparrow-Labs
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,18 +21,13 @@
  THE SOFTWARE.
  */
 
-@import CoreData;
+@import CloudKit;
 
-#import <SLCoreDataStack.h>
-#import <CBRManagedObjectCache.h>
 
-#import <CBRCloudBridge.h>
-#import <CBRCloudObject.h>
-#import <CBRCloudConnection.h>
 
-#import <NSManagedObject+CloudBridgeSubclassHooks.h>
-#import <NSManagedObject+CloudBridge.h>
-#import <NSRelationshipDescription+CloudBridge.h>
-#import <CBRManagedObjectToCloudObjectTransformer.h>
+@interface CKDatabase (CBRCloudKitConnection)
 
-#import <CBROfflineCapableCloudBridge.h>
+- (void)bulkSaveRecords:(NSArray *)records completionHandler:(void(^)(NSArray *savedRecords, NSError *error))completionHandler;
+- (void)bulkDeleteRecordsWithIDs:(NSArray *)recordIDs completionHandler:(void(^)(NSArray *deletedRecordIDs, NSError *error))completionHandler;
+
+@end

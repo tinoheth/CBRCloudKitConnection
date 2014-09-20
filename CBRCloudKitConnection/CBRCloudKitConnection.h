@@ -29,6 +29,7 @@
 
 #import <CKRecord+CBRCloudKitConnection.h>
 #import <CKRecordID+CBRCloudKitConnection.h>
+#import <CKDatabase+CBRCloudKitConnection.h>
 #import <NSAttributeDescription+CBRManagedObjectToCKRecordTransformer.h>
 #import <NSRelationshipDescription+CBRManagedObjectToCKRecordTransformer.h>
 

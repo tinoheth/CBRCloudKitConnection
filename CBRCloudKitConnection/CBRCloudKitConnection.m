@@ -131,28 +131,20 @@
 
 - (void)bulkCreateCloudObjects:(NSArray *)cloudObjects forManagedObjects:(NSArray *)managedObjects completionHandler:(void (^)(NSArray *cloudObjects, NSError *error))completionHandler
 {
-    CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:cloudObjects recordIDsToDelete:nil];
-    operation.savePolicy = CKRecordSaveAllKeys;
-
-    [operation setModifyRecordsCompletionBlock:^(NSArray *savedRecords, NSArray *deletedRecordIDs, NSError *operationError) {
+    [self.database bulkSaveRecords:cloudObjects completionHandler:^(NSArray *savedRecords, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            completionHandler(savedRecords, operationError);
+            completionHandler(savedRecords, error);
         });
     }];
-    [self.database addOperation:operation];
 }
 
 - (void)bulkSaveCloudObjects:(NSArray *)cloudObjects forManagedObjects:(NSArray *)managedObjects completionHandler:(void (^)(NSArray *cloudObjects, NSError *error))completionHandler
 {
-    CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:cloudObjects recordIDsToDelete:nil];
-    operation.savePolicy = CKRecordSaveAllKeys;
-
-    [operation setModifyRecordsCompletionBlock:^(NSArray *savedRecords, NSArray *deletedRecordIDs, NSError *operationError) {
+    [self.database bulkSaveRecords:cloudObjects completionHandler:^(NSArray *savedRecords, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            completionHandler(savedRecords, operationError);
+            completionHandler(savedRecords, error);
         });
     }];
-    [self.database addOperation:operation];
 }
 
 - (void)bulkDeleteCloudObjects:(NSArray *)cloudObjects forManagedObjects:(NSArray *)managedObjects completionHandler:(void (^)(NSArray *deletedObjectIdentifiers, NSError *error))completionHandler
@@ -164,9 +156,9 @@
         [recordIDsToDelete addObject:record.recordID];
     }
 
-    CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:nil recordIDsToDelete:recordIDsToDelete];
-    [operation setModifyRecordsCompletionBlock:^(NSArray *savedRecords, NSArray *deletedRecordIDs, NSError *operationError) {
+    [self.database bulkDeleteRecordsWithIDs:recordIDsToDelete completionHandler:^(NSArray *deletedRecordIDs, NSError *error) {
         NSMutableArray *deletedObjectIdentifiers = [NSMutableArray array];
+
         for (CKRecordID *recordID in deletedRecordIDs) {
             CKRecord *record = indexedCloudObjects[recordID];
 
@@ -174,10 +166,9 @@
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            completionHandler(deletedObjectIdentifiers, operationError);
+            completionHandler(deletedObjectIdentifiers, error);
         });
     }];
-    [self.database addOperation:operation];
 }
 
 #pragma mark - Private category implementation ()
