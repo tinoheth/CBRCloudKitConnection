@@ -25,6 +25,67 @@
 
 @implementation CKDatabase (CBRCloudKitConnection)
 
+- (void)bulkFetchRecordsOfQuery:(CKQuery *)query
+              completionHandler:(void(^)(NSArray *records, NSError *error))completionHandler
+{
+    [self bulkFetchRecordsOfQuery:query desiredKeys:nil completionHandler:completionHandler];
+}
+
+- (void)bulkFetchRecordsOfQuery:(CKQuery *)query
+                    desiredKeys:(NSArray *)desiredKeys
+              completionHandler:(void(^)(NSArray *records, NSError *error))completionHandler
+{
+    NSMutableArray *records = [NSMutableArray array];
+
+    [self enumerateAllRecordsInQuery:query desiredKeys:desiredKeys enumerator:^(CKRecord *record) {
+        if (record) {
+            [records addObject:record];
+        }
+    } completionHandler:^(NSError *error) {
+        completionHandler(records, error);
+    }];
+}
+
+- (void)enumerateAllRecordsInQuery:(CKQuery *)query
+                       desiredKeys:(NSArray *)desiredKeys
+                        enumerator:(void(^)(CKRecord *record))enumerator
+                 completionHandler:(void(^)(NSError *error))completionHandler
+{
+    [self _enumerateObjectsInQuery:query withCursor:nil desiredKeys:desiredKeys enumerator:enumerator completionHandler:completionHandler];
+}
+
+- (void)_enumerateObjectsInQuery:(CKQuery *)query
+                      withCursor:(CKQueryCursor *)cursor
+                     desiredKeys:(NSArray *)desiredKeys
+                      enumerator:(void(^)(CKRecord *record))enumerator
+               completionHandler:(void(^)(NSError *error))completionHandler
+{
+    NSParameterAssert(enumerator);
+    NSParameterAssert(completionHandler);
+
+    CKQueryOperation *queryOperation = cursor ? [[CKQueryOperation alloc] initWithCursor:cursor] : [[CKQueryOperation alloc] initWithQuery:query];
+    queryOperation.desiredKeys = desiredKeys;
+    queryOperation.resultsLimit = 500;
+
+    [queryOperation setRecordFetchedBlock:^(CKRecord *record) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            enumerator(record);
+        });
+    }];
+
+    [queryOperation setQueryCompletionBlock:^(CKQueryCursor *cursor, NSError *error) {
+        if (error) {
+            completionHandler(error);
+        } else if (cursor) {
+            [self _enumerateObjectsInQuery:query withCursor:cursor desiredKeys:desiredKeys enumerator:enumerator completionHandler:completionHandler];
+        } else {
+            completionHandler(nil);
+        }
+    }];
+
+    [self addOperation:queryOperation];
+}
+
 - (void)bulkSaveRecords:(NSArray *)records completionHandler:(void(^)(NSArray *savedRecords, NSError *error))completionHandler
 {
     [self _bulkModifyRecordsToSave:records recordIDsToDelete:nil completionHandler:^(NSArray *savedRecords, NSArray *deletedRecordIDs, NSError *error) {

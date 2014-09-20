@@ -60,7 +60,13 @@
 {
     predicate = [self _predicateByTransformingPredicate:predicate ?: [NSPredicate predicateWithValue:YES]];
     CKQuery *query = [[CKQuery alloc] initWithRecordType:entity.name predicate:predicate];
-    [self _fetchAllRecordsOfQuery:query completionHandler:completionHandler];
+    [self.database bulkFetchRecordsOfQuery:query completionHandler:^(NSArray *records, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completionHandler) {
+                completionHandler(records, error);
+            }
+        });
+    }];
 }
 
 - (void)createCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler
@@ -202,49 +208,6 @@
     }
 
     return originalPredicate;
-}
-
-- (void)_fetchAllRecordsOfQuery:(CKQuery *)query completionHandler:(void(^)(NSArray *records, NSError *error))completionHandler
-{
-    NSMutableArray *result = [NSMutableArray array];
-
-    [self _enumerateObjectsInQuery:query withCursor:nil enumerator:^(CKRecord *record) {
-        [result addObject:record];
-    } completionHandler:^(NSError *error) {
-        completionHandler(result, error);
-    }];
-}
-
-- (void)_enumerateObjectsInQuery:(CKQuery *)query
-                      withCursor:(CKQueryCursor *)cursor
-                      enumerator:(void(^)(CKRecord *record))enumerator
-               completionHandler:(void(^)(NSError *error))completionHandler
-{
-    NSParameterAssert(enumerator);
-    NSParameterAssert(completionHandler);
-
-    CKQueryOperation *queryOperation = cursor ? [[CKQueryOperation alloc] initWithCursor:cursor] : [[CKQueryOperation alloc] initWithQuery:query];
-    queryOperation.resultsLimit = 500;
-
-    [queryOperation setRecordFetchedBlock:^(CKRecord *record) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            enumerator(record);
-        });
-    }];
-
-    [queryOperation setQueryCompletionBlock:^(CKQueryCursor *cursor, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (error) {
-                completionHandler(error);
-            } else if (cursor) {
-                [self _enumerateObjectsInQuery:query withCursor:cursor enumerator:enumerator completionHandler:completionHandler];
-            } else {
-                completionHandler(nil);
-            }
-        });
-    }];
-
-    [self.database addOperation:queryOperation];
 }
 
 @end

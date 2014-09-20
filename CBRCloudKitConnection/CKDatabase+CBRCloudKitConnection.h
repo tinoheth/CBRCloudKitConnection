@@ -27,6 +27,18 @@
 
 @interface CKDatabase (CBRCloudKitConnection)
 
+- (void)bulkFetchRecordsOfQuery:(CKQuery *)query
+              completionHandler:(void(^)(NSArray *records, NSError *error))completionHandler;
+
+- (void)bulkFetchRecordsOfQuery:(CKQuery *)query
+                    desiredKeys:(NSArray *)desiredKeys
+              completionHandler:(void(^)(NSArray *records, NSError *error))completionHandler;
+
+- (void)enumerateAllRecordsInQuery:(CKQuery *)query
+                       desiredKeys:(NSArray *)desiredKeys
+                        enumerator:(void(^)(CKRecord *record))enumerator
+                 completionHandler:(void(^)(NSError *error))completionHandler;
+
 - (void)bulkSaveRecords:(NSArray *)records completionHandler:(void(^)(NSArray *savedRecords, NSError *error))completionHandler;
 - (void)bulkDeleteRecordsWithIDs:(NSArray *)recordIDs completionHandler:(void(^)(NSArray *deletedRecordIDs, NSError *error))completionHandler;
 
