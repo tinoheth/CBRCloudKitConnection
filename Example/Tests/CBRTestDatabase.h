@@ -13,11 +13,11 @@
 /**
  @abstract  <#abstract comment#>
  */
-@interface CBRTestDatabase : NSObject
+@interface CBRTestDatabase : CKDatabase
 
-@property (nonatomic, readonly) CKDatabase *database;
 @property (nonatomic, strong) NSMutableArray *operations;
-
 + (instancetype)testDatabase;
+
+- (instancetype)init;
 
 @end

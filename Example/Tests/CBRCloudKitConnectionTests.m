@@ -34,7 +34,7 @@
     self.recordID = [[CKRecordID alloc] initWithRecordName:NSStringFromClass([CloudKitEntity1 class]) zoneID:[[CKRecordZoneID alloc] initWithZoneName:@"__default__" ownerName:@"__oliver__"]];
 
     self.database = [CBRTestDatabase testDatabase];
-    self.connection = [[CBRCloudKitConnection alloc] initWithDatabase:self.database.database];
+    self.connection = [[CBRCloudKitConnection alloc] initWithDatabase:self.database];
 }
 
 - (void)testThatBackendTranslatedManagedObjectReferencesIntoCKRecordIDs

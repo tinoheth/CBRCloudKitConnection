@@ -7,7 +7,7 @@
 //
 
 #import "CBRTestDatabase.h"
-
+@import ObjectiveC.message;
 
 
 @interface CBRTestDatabase ()
@@ -17,11 +17,6 @@
 
 
 @implementation CBRTestDatabase
-
-- (CKDatabase *)database
-{
-    return (id)self;
-}
 
 - (NSMutableArray *)operations
 {
@@ -35,6 +30,15 @@
 + (instancetype)testDatabase
 {
     return [self new];
+}
+
+- (instancetype)init
+{
+    struct objc_super super = {
+        .receiver = self,
+        .super_class = [NSObject class]
+    };
+    return ((id (*)(struct objc_super *, SEL))objc_msgSendSuper)(&super, _cmd);
 }
 
 - (void)addOperation:(CKDatabaseOperation *)operation
