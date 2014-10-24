@@ -22,7 +22,7 @@
 #define COCOAPODS_POD_AVAILABLE_CloudBridge
 #define COCOAPODS_VERSION_MAJOR_CloudBridge 0
 #define COCOAPODS_VERSION_MINOR_CloudBridge 10
-#define COCOAPODS_VERSION_PATCH_CloudBridge 1
+#define COCOAPODS_VERSION_PATCH_CloudBridge 2
 
 // Expecta
 #define COCOAPODS_POD_AVAILABLE_Expecta

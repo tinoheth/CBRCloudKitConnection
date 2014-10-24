@@ -76,7 +76,7 @@ static NSURL *newTemporaryAssetURL(void)
     }
 
     [self updateCloudObject:record withPropertiesFromManagedObject:managedObject];
-    return (CKRecord *)[managedObject prepareCloudObject:record];
+    return (CKRecord *)[managedObject finalizeCloudObject:record];
 }
 
 - (void)updateCloudObject:(CKRecord *)record withPropertiesFromManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject

@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "CBRCloudKitConnection"
-  s.version          = "0.10.0"
+  s.version          = "0.10.1"
   s.summary          = "CloudBridgeConnection for CloudKit."
   s.homepage         = "https://github.com/Cloud-Bridge/CBRCloudKitConnection"
   s.license          = 'MIT'
