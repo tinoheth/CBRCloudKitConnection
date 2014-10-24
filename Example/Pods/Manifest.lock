@@ -1,32 +1,29 @@
 PODS:
-  - CBRCloudKitConnection (0.9.2):
-    - CloudBridge (~> 0.9.6)
+  - CBRCloudKitConnection (0.10.0):
+    - CloudBridge (~> 0.10.0)
   - CBRManagedObjectCache (1.3.0)
-  - CloudBridge (0.9.6):
+  - CloudBridge (0.10.1):
     - CBRManagedObjectCache (~> 1.3.0)
     - SLCoreDataStack (~> 0.8)
   - Expecta (0.3.1)
-  - OCMock (3.0.2)
+  - OCMock (3.1.1)
   - SLCoreDataStack (0.8.0)
 
 DEPENDENCIES:
   - CBRCloudKitConnection (from `../`)
   - Expecta (~> 0.3.1)
-  - OCMock (from `https://github.com/erikdoe/ocmock.git`, commit `c026ab231d1b7c6acace2b8d2f6112ffd9b6bd6d`)
+  - OCMock (~> 3.1.1)
 
 EXTERNAL SOURCES:
   CBRCloudKitConnection:
     :path: ../
-  OCMock:
-    :commit: c026ab231d1b7c6acace2b8d2f6112ffd9b6bd6d
-    :git: https://github.com/erikdoe/ocmock.git
 
 SPEC CHECKSUMS:
-  CBRCloudKitConnection: bbbe93396afb3f9d49e5aceddc794f949ce9a241
+  CBRCloudKitConnection: 6321163164c7616a0b5b01e096650d61cc395480
   CBRManagedObjectCache: 8ef33932382421d783041d39ca2c0f30942661a5
-  CloudBridge: 46a0c111c654b9b184263606af4cc84968dcbe1c
+  CloudBridge: 2fc1a080cfd63063f3721fbaa506cb1be33c1e3e
   Expecta: 03aabd0a89d8dea843baecb19a7fd7466a69a31d
-  OCMock: 1adf522d315ac895d50da509b783180fc36e1469
+  OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
   SLCoreDataStack: 5ce030f675397684f06932a8b6ffadaaf319cae6
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.34.4

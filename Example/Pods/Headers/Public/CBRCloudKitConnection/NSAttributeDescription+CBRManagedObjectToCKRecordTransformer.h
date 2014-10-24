@@ -1,0 +1,1 @@
+../../../../../CBRCloudKitConnection/NSAttributeDescription+CBRManagedObjectToCKRecordTransformer.h

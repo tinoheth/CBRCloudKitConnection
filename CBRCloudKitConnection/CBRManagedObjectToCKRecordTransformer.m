@@ -76,7 +76,7 @@ static NSURL *newTemporaryAssetURL(void)
     }
 
     [self updateCloudObject:record withPropertiesFromManagedObject:managedObject];
-    return record;
+    return (CKRecord *)[managedObject prepareCloudObject:record];
 }
 
 - (void)updateCloudObject:(CKRecord *)record withPropertiesFromManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject
@@ -124,14 +124,13 @@ static NSURL *newTemporaryAssetURL(void)
             }
         }
     }
-
-    [managedObject prepareMutableCloudObject:record];
 }
 
 - (id<CBRCloudKitEntity>)managedObjectFromCloudObject:(CKRecord *)record
                                             forEntity:(NSEntityDescription *)entity
                                inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
+    record = (CKRecord *)[NSClassFromString(entity.name) prepareForUpdateWithCloudObject:record];
     NSManagedObject<CBRCloudKitEntity> *managedObject = [managedObjectContext.cbr_cache objectOfType:entity.name withValue:record.recordID.recordIDString forAttribute:@"recordIDString"];
 
     if (!managedObject) {
@@ -147,7 +146,7 @@ static NSURL *newTemporaryAssetURL(void)
 
 - (void)updateManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withPropertiesFromCloudObject:(CKRecord *)record
 {
-    [managedObject prepareForUpdateWithMutableCloudObject:record];
+    [managedObject prepareForUpdateWithCloudObject:record];
 
     NSEntityDescription *entity = managedObject.entity;
     NSParameterAssert(entity);
@@ -200,6 +199,7 @@ static NSURL *newTemporaryAssetURL(void)
     }
     
     managedObject.recordIDString = record.recordID.recordIDString;
+    [managedObject finalizeUpdateWithCloudObject:record];
 }
 
 #pragma mark - Private category implementation ()
