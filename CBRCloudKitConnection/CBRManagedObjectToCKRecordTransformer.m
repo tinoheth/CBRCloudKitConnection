@@ -105,7 +105,7 @@ static NSURL *newTemporaryAssetURL(void)
 
             if (data) {
                 NSURL *URL = newTemporaryAssetURL();
-                BOOL success = [data writeToURL:URL atomically:YES];
+                __assert_unused BOOL success = [data writeToURL:URL atomically:YES];
                 NSParameterAssert(success);
 
                 record[relationshipDescription.name] = [[CKAsset alloc] initWithFileURL:URL];

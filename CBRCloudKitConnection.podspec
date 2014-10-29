@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "CBRCloudKitConnection"
-  s.version          = "0.10.1"
+  s.version          = "0.10.2"
   s.summary          = "CloudBridgeConnection for CloudKit."
   s.homepage         = "https://github.com/Cloud-Bridge/CBRCloudKitConnection"
   s.license          = 'MIT'
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'CBRCloudKitConnection'
-
   s.frameworks = 'CloudKit'
   s.dependency 'CloudBridge', '~> 0.10.0'
+  s.prefix_header_contents = '#ifndef NS_BLOCK_ASSERTIONS', '#define __assert_unused', '#else', '#define __assert_unused __unused', '#endif'
 end
