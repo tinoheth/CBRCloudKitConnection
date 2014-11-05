@@ -23,6 +23,7 @@
 
 #import "NSAttributeDescription+CBRManagedObjectToCKRecordTransformer.h"
 #import <CBRCloudKitEntity.h>
+#import <CBROfflineCapableCloudBridge.h>
 
 
 
@@ -30,7 +31,7 @@
 
 - (BOOL)cloudKitDisabled
 {
-    if ([self.name isEqualToString:NSStringFromSelector(@selector(recordIDString))]) {
+    if ([self.name isEqualToString:NSStringFromSelector(@selector(recordIDString))] || [self.name isEqualToString:NSStringFromSelector(@selector(hasPendingCloudBridgeChanges))] || [self.name isEqualToString:NSStringFromSelector(@selector(hasPendingCloudBridgeDeletion))]) {
         return YES;
     }
 
