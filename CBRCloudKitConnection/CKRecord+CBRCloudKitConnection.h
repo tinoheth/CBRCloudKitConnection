@@ -21,15 +21,13 @@
  THE SOFTWARE.
  */
 
-@import CloudKit;
-@import CoreData;
-
-#import <CBRCloudObject.h>
+#import <CloudKit/CloudKit.h>
+#import <CloudBridge.h>
 
 
 
 @interface CKRecord (CBRCloudKitConnection) <CBRCloudObject, CBRMutableCloudObject>
 
-- (NSEntityDescription *)entityInManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+@property (nonatomic, readonly) CBREntityDescription *cloudBridgeEntityDescription;
 
 @end

@@ -21,12 +21,22 @@
  THE SOFTWARE.
  */
 
-#import <CloudKit/CloudKit.h>
+#import <CloudBridge.h>
 
 
 
-@protocol CBRCloudKitEntity <NSObject>
+@interface CBRRelationshipDescription (CBRCKRecordTransformer)
 
-@property (nonatomic, strong) NSString *recordIDString;
+/**
+ Set `cloudKitEnabled` of the relation's `userInfo` dictionary to `1` to enable CloudKit sync.
+ */
+@property (nonatomic, readonly) BOOL cloudKitEnabled;
+
+/**
+ A relationship which's `destinationEntity.userInfo` has set `cloudKitAssetDataKeyPath` are modeled via `CKAsset`.
+ 
+ `destinationEntity.cloudKitAssetDataKeyPath` must be `NSData` typed.
+ */
+@property (nonatomic, readonly) NSString *cloudKitAssetDataKeyPath;
 
 @end

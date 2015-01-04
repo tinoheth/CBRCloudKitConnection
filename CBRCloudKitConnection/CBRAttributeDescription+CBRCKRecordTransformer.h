@@ -21,12 +21,16 @@
  THE SOFTWARE.
  */
 
-#import <CloudKit/CloudKit.h>
+#import <CloudBridge.h>
 
 
+@interface CBRAttributeDescription (CBRCKRecordTransformer)
 
-@protocol CBRCloudKitEntity <NSObject>
-
-@property (nonatomic, strong) NSString *recordIDString;
+/**
+ Set `cloudKitDisabled` of the attribute's `userInfo` dictionary to `1` to disable CloudKit sync.
+ 
+ `recordIDString`, `hasUnsyncedCloudKitChanges`, `hasPendingCloudKitDeletion` are always disabled.
+ */
+@property (nonatomic, readonly) BOOL cloudKitDisabled;
 
 @end

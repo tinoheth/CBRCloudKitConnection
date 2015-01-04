@@ -25,9 +25,9 @@
 
 @implementation CKRecord (CBRCloudKitConnection)
 
-- (NSEntityDescription *)entityInManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+- (CBREntityDescription *)cloudBridgeEntityDescription
 {
-    return managedObjectContext.persistentStoreCoordinator.managedObjectModel.entitiesByName[self.recordType];
+    return [[NSClassFromString(self.recordType) cloudBridge].databaseAdapter entityDescriptionForClass:NSClassFromString(self.recordType)];
 }
 
 @end

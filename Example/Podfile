@@ -1,8 +1,0 @@
-source 'https://github.com/CocoaPods/Specs.git'
-
-target 'CBRCloudKitConnection', :exclusive => true do
-  pod "CBRCloudKitConnection", :path => "../"
-
-  pod 'Expecta', '~> 0.3.1'
-  pod 'OCMock', '~> 3.1.1'
-end

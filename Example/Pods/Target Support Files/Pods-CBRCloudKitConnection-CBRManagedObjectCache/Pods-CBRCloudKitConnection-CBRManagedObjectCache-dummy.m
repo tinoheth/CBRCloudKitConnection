@@ -1,5 +1,0 @@
-#import <Foundation/Foundation.h>
-@interface PodsDummy_Pods_CBRCloudKitConnection_CBRManagedObjectCache : NSObject
-@end
-@implementation PodsDummy_Pods_CBRCloudKitConnection_CBRManagedObjectCache
-@end

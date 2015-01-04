@@ -20,6 +20,7 @@
 @property (nonatomic, strong) CKRecordID *recordID;
 
 @property (nonatomic, strong) CBRCloudKitConnection *connection;
+@property (nonatomic, strong) CBRCoreDataDatabaseAdapter *adapter;
 @property (nonatomic, strong) CBRTestDatabase *database;
 
 
@@ -33,6 +34,7 @@
 
     self.recordID = [[CKRecordID alloc] initWithRecordName:NSStringFromClass([CloudKitEntity1 class]) zoneID:[[CKRecordZoneID alloc] initWithZoneName:@"__default__" ownerName:@"__oliver__"]];
 
+    self.adapter = [[CBRCoreDataDatabaseAdapter alloc] initWithCoreDataStack:[CBRTestDataStore sharedInstance]];
     self.database = [CBRTestDatabase testDatabase];
     self.connection = [[CBRCloudKitConnection alloc] initWithDatabase:self.database];
 }
@@ -46,8 +48,9 @@
     entity.dateValue = [NSDate date];
     entity.recordIDString = self.recordID.recordIDString;
 
+    CBREntityDescription *entityDescription = [self.adapter entityDescriptionForClass:[CloudKitEntity1 class]];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND inverseRelationship == %@", entity.stringValue, entity];
-    [self.connection fetchCloudObjectsForEntity:entity.entity withPredicate:predicate userInfo:nil completionHandler:NULL];
+    [self.connection fetchCloudObjectsForEntity:entityDescription withPredicate:predicate userInfo:nil completionHandler:NULL];
 
     expect(self.database.operations).to.haveCountOf(1);
     CKQueryOperation *operation = self.database.operations.firstObject;

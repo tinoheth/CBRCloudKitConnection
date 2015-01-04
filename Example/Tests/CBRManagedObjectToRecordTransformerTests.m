@@ -13,12 +13,17 @@
 #import <CloudBridge.h>
 #import <CBRCloudKitConnection.h>
 
+#import "CBRTestDatabase.h"
 #import "CBRTestCase.h"
 
 @interface CBRManagedObjectToCKRecordTransformerTests : CBRTestCase
 
 @property (nonatomic, strong) CKRecordID *recordID;
-@property (nonatomic, strong) CBRManagedObjectToCKRecordTransformer *transformer;
+@property (nonatomic, strong) CBRCloudBridge *cloudBridge;
+@property (nonatomic, strong) CBRCoreDataDatabaseAdapter *databaseAdapter;
+@property (nonatomic, strong) CBRTestDatabase *database;
+@property (nonatomic, strong) CBRCloudKitConnection *connection;
+@property (nonatomic, strong) CBRCKRecordTransformer *transformer;
 
 @end
 
@@ -29,7 +34,14 @@
     [super setUp];
 
     self.recordID = [[CKRecordID alloc] initWithRecordName:NSStringFromClass([CloudKitEntity1 class]) zoneID:[[CKRecordZoneID alloc] initWithZoneName:@"__default__" ownerName:@"__oliver__"]];
-    self.transformer = [[CBRManagedObjectToCKRecordTransformer alloc] init];
+    self.transformer = [[CBRCKRecordTransformer alloc] init];
+
+    self.database = [CBRTestDatabase testDatabase];
+    self.connection = [[CBRCloudKitConnection alloc] initWithDatabase:self.database];
+    self.databaseAdapter = [[CBRCoreDataDatabaseAdapter alloc] initWithCoreDataStack:[CBRTestDataStore sharedInstance]];
+    self.cloudBridge = [[CBRCloudBridge alloc] initWithCloudConnection:self.connection databaseAdapter:self.databaseAdapter];
+
+    [NSManagedObject setCloudBridge:self.cloudBridge];
 }
 
 - (void)testThatTransformerTransformsRecordIntoManagedObject
@@ -38,7 +50,7 @@
     record[@"stringValue"] = @"string";
     record[@"dateValue"] = [NSDate date];
 
-    CloudKitEntity1 *entity = [self.transformer managedObjectFromCloudObject:record forEntity:[record entityInManagedObjectContext:self.context] inManagedObjectContext:self.context];
+    CloudKitEntity1 *entity = [self.transformer persistentObjectFromCloudObject:record forEntity:record.cloudBridgeEntityDescription];
     expect(entity.stringValue).to.equal(record[@"stringValue"]);
     expect(entity.dateValue).to.equal(record[@"dateValue"]);
 }
@@ -49,8 +61,8 @@
     record[@"stringValue"] = @"string";
     record[@"dateValue"] = [NSDate date];
 
-    CloudKitEntity1 *entity1 = [self.transformer managedObjectFromCloudObject:record forEntity:[record entityInManagedObjectContext:self.context] inManagedObjectContext:self.context];
-    CloudKitEntity1 *entity2 = [self.transformer managedObjectFromCloudObject:record forEntity:[record entityInManagedObjectContext:self.context] inManagedObjectContext:self.context];
+    CloudKitEntity1 *entity1 = [self.transformer persistentObjectFromCloudObject:record forEntity:record.cloudBridgeEntityDescription];
+    CloudKitEntity1 *entity2 = [self.transformer persistentObjectFromCloudObject:record forEntity:record.cloudBridgeEntityDescription];
 
     expect(entity1 == entity2).to.beTruthy();
 }
@@ -62,7 +74,7 @@
     entity.disabledStringValue = @"no";
     entity.recordIDString = self.recordID.recordIDString;
 
-    CKRecord *record = [self.transformer cloudObjectFromManagedObject:entity];
+    CKRecord *record = [self.transformer cloudObjectFromPersistentObject:entity];
     expect(record[@"disabledStringValue"]).to.beNil();
 }
 
@@ -75,7 +87,7 @@
     record[@"dateValue"] = [NSDate date];
     record[@"dataBlob"] = [[CKAsset alloc] initWithFileURL:fileURL];
 
-    CloudKitEntity1 *entity = [self.transformer managedObjectFromCloudObject:record forEntity:[record entityInManagedObjectContext:self.context] inManagedObjectContext:self.context];
+    CloudKitEntity1 *entity = [self.transformer persistentObjectFromCloudObject:record forEntity:record.cloudBridgeEntityDescription];
     expect(entity.dataBlob).toNot.beNil();
     expect(entity.dataBlob.data).to.equal([NSData dataWithContentsOfURL:fileURL]);
 }
@@ -94,7 +106,7 @@
     expect(dataBlob.data).toNot.beNil();
     entity1.dataBlob = dataBlob;
 
-    CKRecord *record = [self.transformer cloudObjectFromManagedObject:entity1];
+    CKRecord *record = [self.transformer cloudObjectFromPersistentObject:entity1];
     expect(record[@"dataBlob"]).toNot.beNil();
 
     CKAsset *asset = record[@"dataBlob"];
@@ -114,7 +126,7 @@
                                                              inManagedObjectContext:self.context];
     entity2.entity1 = entity1;
 
-    CKRecord *record = [self.transformer cloudObjectFromManagedObject:entity2];
+    CKRecord *record = [self.transformer cloudObjectFromPersistentObject:entity2];
     CKReference *reference = record[@"entity1"];
     
     expect(reference.recordID).to.equal(self.recordID);
@@ -131,7 +143,7 @@
                                                              inManagedObjectContext:self.context];
     entity2.cascadingEntity1 = entity1;
 
-    CKRecord *record = [self.transformer cloudObjectFromManagedObject:entity2];
+    CKRecord *record = [self.transformer cloudObjectFromPersistentObject:entity2];
     CKReference *reference = record[@"cascadingEntity1"];
 
     expect(reference.recordID).to.equal(self.recordID);
@@ -151,7 +163,7 @@
     CKRecord *record = [[CKRecord alloc] initWithRecordType:NSStringFromClass([CloudKitEntity2 class])];
     record[@"entity1"] = [[CKReference alloc] initWithRecordID:self.recordID action:CKReferenceActionNone];
 
-    CloudKitEntity2 *entity2 = [self.transformer managedObjectFromCloudObject:record forEntity:[record entityInManagedObjectContext:self.context] inManagedObjectContext:self.context];
+    CloudKitEntity2 *entity2 = [self.transformer persistentObjectFromCloudObject:record forEntity:record.cloudBridgeEntityDescription];
     expect(entity2.entity1).to.equal(entity1);
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6220.14" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="CloudKitDataBlob" representedClassName="CloudKitDataBlob" syncable="YES">
         <attribute name="data" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="entity1" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CloudKitEntity1" inverseName="dataBlob" inverseEntity="CloudKitEntity1" syncable="YES"/>
@@ -18,7 +18,11 @@
         <attribute name="hasUnsyncedCloudKitChanges" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="recordIDString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stringValue" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="cascadingEntities2" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CloudKitEntity2" inverseName="cascadingEntity1" inverseEntity="CloudKitEntity2" syncable="YES"/>
+        <relationship name="cascadingEntities2" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CloudKitEntity2" inverseName="cascadingEntity1" inverseEntity="CloudKitEntity2" syncable="YES">
+            <userInfo>
+                <entry key="cloudBridgeCascades" value="1"/>
+            </userInfo>
+        </relationship>
         <relationship name="dataBlob" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CloudKitDataBlob" inverseName="entity1" inverseEntity="CloudKitDataBlob" syncable="YES">
             <userInfo>
                 <entry key="cloudKitEnabled" value="1"/>
@@ -44,7 +48,7 @@
     </entity>
     <elements>
         <element name="CloudKitDataBlob" positionX="-54" positionY="63" width="128" height="73"/>
-        <element name="CloudKitEntity1" positionX="-63" positionY="-18" width="128" height="178"/>
+        <element name="CloudKitEntity1" positionX="-63" positionY="-18" width="128" height="180"/>
         <element name="CloudKitEntity2" positionX="-45" positionY="45" width="128" height="133"/>
     </elements>
 </model>

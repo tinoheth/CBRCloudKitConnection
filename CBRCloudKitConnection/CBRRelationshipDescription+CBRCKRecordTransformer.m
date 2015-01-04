@@ -21,12 +21,18 @@
  THE SOFTWARE.
  */
 
-#import <CloudKit/CloudKit.h>
+#import "CBRRelationshipDescription+CBRCKRecordTransformer.h"
 
+@implementation CBRRelationshipDescription (CBRCKRecordTransformer)
 
+- (BOOL)cloudKitEnabled
+{
+    return [self.userInfo[@"cloudKitEnabled"] isEqual:@"1"];
+}
 
-@protocol CBRCloudKitEntity <NSObject>
-
-@property (nonatomic, strong) NSString *recordIDString;
+- (NSString *)cloudKitAssetDataKeyPath
+{
+    return self.destinationEntity.userInfo[@"cloudKitAssetDataKeyPath"];
+}
 
 @end

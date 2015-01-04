@@ -21,12 +21,25 @@
  THE SOFTWARE.
  */
 
-#import <CloudKit/CloudKit.h>
+#import "CBRAttributeDescription+CBRCKRecordTransformer.h"
+#import <CBRCloudKitEntity.h>
+#import <CBROfflineCapableCloudBridge.h>
 
 
 
-@protocol CBRCloudKitEntity <NSObject>
+@implementation CBRAttributeDescription (CBRCKRecordTransformer)
 
-@property (nonatomic, strong) NSString *recordIDString;
+- (BOOL)cloudKitDisabled
+{
+    if ([self.name isEqualToString:NSStringFromSelector(@selector(recordIDString))] || [self.name isEqualToString:NSStringFromSelector(@selector(hasPendingCloudBridgeChanges))] || [self.name isEqualToString:NSStringFromSelector(@selector(hasPendingCloudBridgeDeletion))]) {
+        return YES;
+    }
+
+    if ([self.userInfo[@"cloudKitDisabled"] isEqual:@"1"]) {
+        return YES;
+    }
+
+    return NO;
+}
 
 @end

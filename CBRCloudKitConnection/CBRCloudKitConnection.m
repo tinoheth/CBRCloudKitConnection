@@ -25,7 +25,7 @@
 
 #import "CBRCloudKitConnection.h"
 
-#import <CBRManagedObjectToCKRecordTransformer.h>
+#import <CBRCKRecordTransformer.h>
 #import <CKRecordID+CBRCloudKitConnection.h>
 
 
@@ -46,17 +46,14 @@
 {
     if (self = [super init]) {
         _database = database;
-        _objectTransformer = [[CBRManagedObjectToCKRecordTransformer alloc] init];
+        _objectTransformer = [[CBRCKRecordTransformer alloc] init];
     }
     return self;
 }
 
 #pragma mark - CBRCloudConnection
 
-- (void)fetchCloudObjectsForEntity:(NSEntityDescription *)entity
-                     withPredicate:(NSPredicate *)predicate
-                          userInfo:(NSDictionary *)userInfo
-                 completionHandler:(void(^)(NSArray *fetchedObjects, NSError *error))completionHandler
+- (void)fetchCloudObjectsForEntity:(CBREntityDescription *)entity withPredicate:(NSPredicate *)predicate userInfo:(NSDictionary *)userInfo completionHandler:(void (^)(NSArray *, NSError *))completionHandler
 {
     predicate = [self _predicateByTransformingPredicate:predicate ?: [NSPredicate predicateWithValue:YES]];
     CKQuery *query = [[CKQuery alloc] initWithRecordType:entity.name predicate:predicate];
@@ -69,7 +66,7 @@
     }];
 }
 
-- (void)createCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler
+- (void)createCloudObject:(CKRecord *)cloudObject forPersistentObject:(id<CBRCloudKitEntity, CBRPersistentObject>)persistentObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *, NSError *))completionHandler
 {
     [self.database saveRecord:cloudObject completionHandler:^(CKRecord *record, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -80,9 +77,9 @@
     }];
 }
 
-- (void)latestCloudObjectForManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler
+- (void)latestCloudObjectForPersistentObject:(id<CBRCloudKitEntity, CBRPersistentObject>)persistentObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *, NSError *))completionHandler
 {
-    [self.database fetchRecordWithID:[CKRecordID recordIDWithRecordIDString:managedObject.recordIDString] completionHandler:^(CKRecord *record, NSError *error) {
+    [self.database fetchRecordWithID:[CKRecordID recordIDWithRecordIDString:persistentObject.recordIDString] completionHandler:^(CKRecord *record, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completionHandler) {
                 completionHandler(record, error);
@@ -91,13 +88,13 @@
     }];
 }
 
-- (void)saveCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *cloudObject, NSError *error))completionHandler
+- (void)saveCloudObject:(CKRecord *)cloudObject forPersistentObject:(id<CBRCloudKitEntity, CBRPersistentObject>)persistentObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(CKRecord *, NSError *))completionHandler
 {
-    if (!managedObject.recordIDString) {
-        return [self createCloudObject:cloudObject forManagedObject:managedObject withUserInfo:userInfo completionHandler:completionHandler];
+    if (!persistentObject.recordIDString) {
+        return [self createCloudObject:cloudObject forPersistentObject:persistentObject withUserInfo:userInfo completionHandler:completionHandler];
     }
 
-    [self.database fetchRecordWithID:[CKRecordID recordIDWithRecordIDString:managedObject.recordIDString] completionHandler:^(CKRecord *record, NSError *error) {
+    [self.database fetchRecordWithID:[CKRecordID recordIDWithRecordIDString:persistentObject.recordIDString] completionHandler:^(CKRecord *record, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error) {
                 if (completionHandler) {
@@ -106,25 +103,21 @@
                 return;
             }
 
-            [managedObject.managedObjectContext performBlock:^{
-                [self.objectTransformer updateCloudObject:record withPropertiesFromManagedObject:managedObject];
-
-                [self.database saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (completionHandler) {
-                            completionHandler(record, error);
-                        }
-                    });
-                }];
+            [persistentObject.cloudBridge.databaseAdapter mutatePersistentObject:persistentObject withBlock:^(id<CBRCloudKitEntity, CBRPersistentObject> persistentObject) {
+                [self.objectTransformer updateCloudObject:record withPropertiesFromPersistentObject:persistentObject];
+            } completion:^(id<CBRPersistentObject> persistentObject) {
+                if (completionHandler) {
+                    completionHandler(record, error);
+                }
             }];
         });
     }];
 }
 
-- (void)deleteCloudObject:(CKRecord *)cloudObject forManagedObject:(NSManagedObject<CBRCloudKitEntity> *)managedObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(NSError *error))completionHandler
+- (void)deleteCloudObject:(CKRecord *)cloudObject forPersistentObject:(id<CBRCloudKitEntity, CBRPersistentObject>)persistentObject withUserInfo:(NSDictionary *)userInfo completionHandler:(void (^)(NSError *))completionHandler
 {
-    NSParameterAssert(managedObject.recordIDString);
-    [self.database deleteRecordWithID:[CKRecordID recordIDWithRecordIDString:managedObject.recordIDString] completionHandler:^(CKRecordID *recordID, NSError *error) {
+    NSParameterAssert(persistentObject.recordIDString);
+    [self.database deleteRecordWithID:[CKRecordID recordIDWithRecordIDString:persistentObject.recordIDString] completionHandler:^(CKRecordID *recordID, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completionHandler) {
                 completionHandler(error);
@@ -135,7 +128,7 @@
 
 #pragma mark - CBROfflineCapableCloudConnection
 
-- (void)bulkCreateCloudObjects:(NSArray *)cloudObjects forManagedObjects:(NSArray *)managedObjects completionHandler:(void (^)(NSArray *cloudObjects, NSError *error))completionHandler
+- (void)bulkCreateCloudObjects:(NSArray *)cloudObjects forPersistentObjects:(NSArray *)persistentObject completionHandler:(void (^)(NSArray *, NSError *))completionHandler
 {
     [self.database bulkSaveRecords:cloudObjects completionHandler:^(NSArray *savedRecords, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -144,7 +137,7 @@
     }];
 }
 
-- (void)bulkSaveCloudObjects:(NSArray *)cloudObjects forManagedObjects:(NSArray *)managedObjects completionHandler:(void (^)(NSArray *cloudObjects, NSError *error))completionHandler
+- (void)bulkSaveCloudObjects:(NSArray *)cloudObjects forPersistentObjects:(NSArray *)persistentObject completionHandler:(void (^)(NSArray *, NSError *))completionHandler
 {
     [self.database bulkSaveRecords:cloudObjects completionHandler:^(NSArray *savedRecords, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -153,7 +146,7 @@
     }];
 }
 
-- (void)bulkDeleteCloudObjects:(NSArray *)cloudObjects forManagedObjects:(NSArray *)managedObjects completionHandler:(void (^)(NSArray *deletedObjectIdentifiers, NSError *error))completionHandler
+- (void)bulkDeleteCloudObjects:(NSArray *)cloudObjects forPersistentObjects:(NSArray *)persistentObject completionHandler:(void (^)(NSArray *, NSError *))completionHandler
 {
     NSMutableArray *recordIDsToDelete = [NSMutableArray array];
     NSMutableDictionary *indexedCloudObjects = [NSMutableDictionary dictionary];
@@ -183,9 +176,9 @@
 {
     if ([originalPredicate isKindOfClass:[NSComparisonPredicate class]]) {
         NSComparisonPredicate *comparisonPredicate = (NSComparisonPredicate *)originalPredicate;
-        NSManagedObject<CBRCloudKitEntity> *rightExpression = comparisonPredicate.rightExpression.constantValue;
+        id<CBRCloudKitEntity> rightExpression = comparisonPredicate.rightExpression.constantValue;
 
-        if ([rightExpression isKindOfClass:[NSManagedObject class]]) {
+        if ([rightExpression conformsToProtocol:@protocol(CBRCloudKitEntity)]) {
             NSParameterAssert([rightExpression conformsToProtocol:@protocol(CBRCloudKitEntity)]);
             NSParameterAssert(rightExpression.recordIDString);
 

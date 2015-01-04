@@ -1,1 +1,0 @@
-PODS_CBRCLOUDKITCONNECTION_SLCOREDATASTACK_OTHER_LDFLAGS = -framework "CoreData" -framework "Foundation"

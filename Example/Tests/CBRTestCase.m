@@ -20,6 +20,7 @@
 {
     [super tearDown];
     [[CBRTestDataStore sharedInstance] wipeAllData];
+    [NSManagedObject setCloudBridge:nil];
 }
 
 @end
